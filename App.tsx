@@ -1,18 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home, Matches, Messages, Profile } from "./screens";
 import { PRIMARY_COLOR, DARK_GRAY, BLACK, WHITE } from "./assets/styles";
 import TabBarIcon from "./components/TabBarIcon";
+import { LoginScreen, RegisterScreen } from "./screens/Auth";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const App = () => (
-  <NavigationContainer>
-    <Stack.Navigator>
-      <Stack.Screen
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        {isLoggedIn ? (
+          <Stack.Screen
         name="Tab"
         options={{ headerShown: false, animationEnabled: false }}
       >
@@ -96,8 +101,24 @@ const App = () => (
           </Tab.Navigator>
         )}
       </Stack.Screen>
-    </Stack.Navigator>
-  </NavigationContainer>
-);
+        ) : (
+          <>
+            <Stack.Screen
+              name="Login"
+              options={{ headerShown: false }}
+            >
+              {() => <LoginScreen setIsLoggedIn={setIsLoggedIn} />}
+            </Stack.Screen>
+            <Stack.Screen
+              name="Register"
+              component={RegisterScreen}
+              options={{ headerShown: false }}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
 export default App;
